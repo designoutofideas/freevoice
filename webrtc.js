@@ -62,7 +62,9 @@ class FreeVoiceWebRTC {
     connectSignaling(serverUrl) {
         return new Promise((resolve, reject) => {
             try {
-                this.signalingSocket = new WebSocket(serverUrl || FreeVoiceConfig.signalingServer.url);
+                const rawUrl = serverUrl || FreeVoiceConfig.signalingServer.url;
+                const normalizedUrl = this.normalizeSignalingUrl(rawUrl);
+                this.signalingSocket = new WebSocket(normalizedUrl);
                 
                 this.signalingSocket.onopen = () => {
                     Logger.info('Connected to signaling server');
@@ -97,6 +99,27 @@ class FreeVoiceWebRTC {
                 reject(error);
             }
         });
+    }
+
+    // Ensure the signaling URL uses a WebSocket scheme
+    normalizeSignalingUrl(url) {
+        if (!url) {
+            return url;
+        }
+
+        if (url.startsWith('ws://') || url.startsWith('wss://')) {
+            return url;
+        }
+
+        if (url.startsWith('http://')) {
+            return `ws://${url.slice(7)}`;
+        }
+
+        if (url.startsWith('https://')) {
+            return `wss://${url.slice(8)}`;
+        }
+
+        return `wss://${url}`;
     }
     
     // Handle signaling disconnect with reconnection

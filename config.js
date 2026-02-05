@@ -87,7 +87,7 @@ const FreeVoiceConfig = {
     
     // Signaling Server (replace with your server)
     signalingServer: {
-        url: 'freevoice-production.up.railway.app',
+        url: 'wss://freevoice-production.up.railway.app',
         reconnectDelay: 2000,
         maxReconnectAttempts: 5
     },
@@ -236,7 +236,7 @@ function loadSavedSettings() {
             const settings = JSON.parse(savedSettings);
             
             if (settings.signalingServer) {
-                FreeVoiceConfig.signalingServer.url = settings.signalingServer;
+                FreeVoiceConfig.signalingServer.url = normalizeSignalingUrl(settings.signalingServer);
             }
             if (settings.theme) {
                 FreeVoiceConfig.ui.theme = settings.theme;
@@ -256,12 +256,36 @@ function loadSavedSettings() {
 // Save settings to localStorage
 function saveSettings(settings) {
     try {
+        if (settings && settings.signalingServer) {
+            settings.signalingServer = normalizeSignalingUrl(settings.signalingServer);
+        }
         localStorage.setItem('freevoice_settings', JSON.stringify(settings));
         return true;
     } catch (e) {
         console.error('Failed to save settings:', e);
         return false;
     }
+}
+
+// Normalize signaling server URLs to ws/wss
+function normalizeSignalingUrl(url) {
+    if (!url) {
+        return url;
+    }
+
+    if (url.startsWith('ws://') || url.startsWith('wss://')) {
+        return url;
+    }
+
+    if (url.startsWith('http://')) {
+        return `ws://${url.slice(7)}`;
+    }
+
+    if (url.startsWith('https://')) {
+        return `wss://${url.slice(8)}`;
+    }
+
+    return `wss://${url}`;
 }
 
 // Utility: Generate room ID
@@ -307,10 +331,13 @@ const Logger = {
 parseURLParameters();
 loadSavedSettings();
 
+// Normalize default signaling URL after any saved overrides
+FreeVoiceConfig.signalingServer.url = normalizeSignalingUrl(FreeVoiceConfig.signalingServer.url);
+
 if (typeof getSignalingServerUrl === 'function') {
     const detectedUrl = getSignalingServerUrl();
-    if (detectedUrl && FreeVoiceConfig.signalingServer.url === 'ws://localhost:8888') {
-        FreeVoiceConfig.signalingServer.url = detectedUrl;
+    if (detectedUrl) {
+        FreeVoiceConfig.signalingServer.url = normalizeSignalingUrl(detectedUrl);
     }
 }
 
