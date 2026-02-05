@@ -29,11 +29,22 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
+      - name: Prepare static files for deployment
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp app.js _site/
+          cp config.js _site/
+          cp styles.css _site/
+          cp webrtc.js _site/
+          cp README.md _site/
+          cp LICENSE _site/
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository (static files)
-          path: '.'
+          # Upload only frontend files
+          path: '_site'
       
       - name: Deploy to GitHub Pages
         id: deployment
