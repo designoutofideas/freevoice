@@ -47,10 +47,19 @@ Open `index.html` in your browser at `http://localhost:8080`
 
 ## ⚙️ Deployment
 
+**Quick Start:** See [QUICK-DEPLOY.md](QUICK-DEPLOY.md) for fast deployment options.
+
+**Full Guide:** See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
+
 ### Docker
 ```bash
 docker build -t freevoice .
 docker run -d -p 8888:8888 freevoice
+```
+
+Or use Docker Compose:
+```bash
+docker-compose up -d
 ```
 
 ### Heroku
@@ -58,6 +67,9 @@ docker run -d -p 8888:8888 freevoice
 heroku create
 git push heroku main
 ```
+
+### GitHub Pages
+Enable in Settings → Pages (frontend only, requires separate signaling server)
 
 ## 🎨 Quality Presets
 
