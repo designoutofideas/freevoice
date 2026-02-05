@@ -23,7 +23,8 @@ function getDefaultSignalingServer() {
     
     // GitHub Pages - you'll need to deploy signaling server separately
     // and set the URL in localStorage or via URL parameter
-    if (hostname.includes('github.io')) {
+    // Use endsWith to ensure github.io is at the end of the domain
+    if (hostname.endsWith('.github.io') || hostname === 'github.io') {
         // Default to localhost for testing, should be overridden via settings
         return 'ws://localhost:8888';
     }
