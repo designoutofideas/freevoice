@@ -1,0 +1,29 @@
+{
+  "name": "freevoice",
+  "version": "1.0.0",
+  "description": "Peer-to-peer video conferencing empowering freedom of speech and human rights",
+  "main": "signaling-server.js",
+  "scripts": {
+    "start": "node signaling-server.js",
+    "dev": "nodemon signaling-server.js"
+  },
+  "keywords": [
+    "webrtc",
+    "video-conferencing",
+    "p2p",
+    "freedom-of-speech",
+    "human-rights",
+    "press-freedom"
+  ],
+  "author": "FreeVoice Contributors",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
