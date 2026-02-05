@@ -3,6 +3,37 @@
  * Based on VDO.Ninja architecture
  */
 
+/**
+ * Auto-detect signaling server URL based on deployment environment
+ * Supports localhost, GitHub Pages, Heroku, Railway, Render, and custom domains
+ */
+function getDefaultSignalingServer() {
+    // Check if window object exists (browser environment)
+    if (typeof window === 'undefined') {
+        return 'ws://localhost:8888';
+    }
+    
+    const hostname = window.location.hostname;
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    
+    // Localhost development
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return 'ws://localhost:8888';
+    }
+    
+    // GitHub Pages - you'll need to deploy signaling server separately
+    // and set the URL in localStorage or via URL parameter
+    // Use endsWith to ensure github.io is at the end of the domain
+    if (hostname.endsWith('.github.io') || hostname === 'github.io') {
+        // Default to localhost for testing, should be overridden via settings
+        return 'ws://localhost:8888';
+    }
+    
+    // Heroku, Railway, Render, or custom domain
+    // Assume signaling server is on same domain
+    return `${protocol}//${hostname}`;
+}
+
 const FreeVoiceConfig = {
     // Application version
     version: '1.0.0',
@@ -87,7 +118,7 @@ const FreeVoiceConfig = {
     
     // Signaling Server (replace with your server)
     signalingServer: {
-        url: 'ws://localhost:8888',
+        url: getDefaultSignalingServer(),
         reconnectDelay: 2000,
         maxReconnectAttempts: 5
     },

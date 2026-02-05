@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log
+.git
+.github
+.gitignore
+LICENSE
+.env
+.DS_Store
+coverage
+.vscode
+.idea
+
+# Exclude deployment documentation but keep inline docs
+DEPLOYMENT.md
+DEPLOYMENT-SUMMARY.md
+DEPLOYMENT-VERIFICATION.md
+QUICK-DEPLOY.md
