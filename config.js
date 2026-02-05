@@ -87,7 +87,7 @@ const FreeVoiceConfig = {
     
     // Signaling Server (replace with your server)
     signalingServer: {
-        url: 'ws://localhost:8888',
+        url: 'freevoice-production.up.railway.app',
         reconnectDelay: 2000,
         maxReconnectAttempts: 5
     },
