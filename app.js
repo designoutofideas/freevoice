@@ -21,6 +21,7 @@ class FreeVoiceApp {
         this.setupWebRTCCallbacks();
         this.populateDeviceSelects();
         this.checkURLParameters();
+        this.syncSettingsUI();
     }
     
     // Setup all UI event listeners
@@ -30,7 +31,7 @@ class FreeVoiceApp {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const page = e.target.dataset.page;
-                this.navigate Page(page);
+                this.navigatePage(page);
             });
         });
         
@@ -278,7 +279,8 @@ class FreeVoiceApp {
     
     // Join an existing room
     async joinRoom() {
-        const roomId = document.getElementById('joinRoomId').value.trim();
+        const rawRoomInput = document.getElementById('joinRoomId').value.trim();
+        const roomId = this.extractRoomId(rawRoomInput);
         const roomPassword = document.getElementById('joinRoomPassword').value;
         const displayName = document.getElementById('displayName').value || 'Guest';
         const quality = document.getElementById('joinQualityPreset').value;
@@ -327,6 +329,36 @@ class FreeVoiceApp {
             Logger.error('Failed to join room:', error);
             this.showToast('Failed to join room: ' + error.message, 'error');
         }
+    }
+
+    // Extract room ID from a full URL or a raw ID
+    extractRoomId(input) {
+        if (!input) {
+            return '';
+        }
+
+        if (input.startsWith('http://') || input.startsWith('https://')) {
+            try {
+                const url = new URL(input);
+                const roomFromQuery = url.searchParams.get('room');
+                if (roomFromQuery) {
+                    return roomFromQuery.trim();
+                }
+
+                if (url.hash && url.hash.includes('?')) {
+                    const hashQuery = url.hash.split('?')[1];
+                    const hashParams = new URLSearchParams(hashQuery);
+                    const roomFromHash = hashParams.get('room');
+                    if (roomFromHash) {
+                        return roomFromHash.trim();
+                    }
+                }
+            } catch (error) {
+                Logger.warn('Failed to parse room URL:', error);
+            }
+        }
+
+        return input;
     }
     
     // Add remote video to grid
@@ -646,11 +678,38 @@ class FreeVoiceApp {
                 autoGainControl: document.getElementById('autoGainControl').checked
             }
         };
+
+        FreeVoiceConfig.signalingServer.url = settings.signalingServer;
+        FreeVoiceConfig.ui.theme = settings.theme;
+        Object.assign(FreeVoiceConfig.audioConstraints, settings.audioConstraints);
         
         if (saveSettings(settings)) {
             this.showToast('Settings saved successfully!', 'success');
         } else {
             this.showToast('Failed to save settings', 'error');
+        }
+    }
+
+    // Sync settings UI from configuration
+    syncSettingsUI() {
+        const signalingInput = document.getElementById('signalingServer');
+        if (signalingInput) {
+            signalingInput.value = FreeVoiceConfig.signalingServer.url;
+        }
+
+        const echo = document.getElementById('echoCancellation');
+        if (echo) {
+            echo.checked = !!FreeVoiceConfig.audioConstraints.echoCancellation;
+        }
+
+        const noise = document.getElementById('noiseSuppression');
+        if (noise) {
+            noise.checked = !!FreeVoiceConfig.audioConstraints.noiseSuppression;
+        }
+
+        const gain = document.getElementById('autoGainControl');
+        if (gain) {
+            gain.checked = !!FreeVoiceConfig.audioConstraints.autoGainControl;
         }
     }
     

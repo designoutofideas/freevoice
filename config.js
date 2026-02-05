@@ -182,6 +182,16 @@ const FreeVoiceConfig = {
 // Parse URL parameters on load
 function parseURLParameters() {
     const urlParams = new URLSearchParams(window.location.search);
+
+    if (window.location.hash && window.location.hash.includes('?')) {
+        const hashQuery = window.location.hash.split('?')[1];
+        const hashParams = new URLSearchParams(hashQuery);
+        hashParams.forEach((value, key) => {
+            if (!urlParams.has(key)) {
+                urlParams.set(key, value);
+            }
+        });
+    }
     
     if (urlParams.has('room')) {
         FreeVoiceConfig.urlParams.room = urlParams.get('room');
@@ -296,6 +306,13 @@ const Logger = {
 // Initialize configuration
 parseURLParameters();
 loadSavedSettings();
+
+if (typeof getSignalingServerUrl === 'function') {
+    const detectedUrl = getSignalingServerUrl();
+    if (detectedUrl && FreeVoiceConfig.signalingServer.url === 'ws://localhost:8888') {
+        FreeVoiceConfig.signalingServer.url = detectedUrl;
+    }
+}
 
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
