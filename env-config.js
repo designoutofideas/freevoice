@@ -21,7 +21,7 @@ function getSignalingServerUrl() {
         const host = window.location.host;
         
         // If on GitHub Pages, use a default public signaling server
-        if (host.includes('github.io')) {
+        if (host.endsWith('.github.io')) {
             // TODO: Replace with your deployed signaling server URL
             return 'wss://your-signaling-server.onrender.com';
         }
