@@ -6,6 +6,8 @@ Peer-to-peer video conferencing designed to empower freedom of speech, press fre
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![WebRTC](https://img.shields.io/badge/WebRTC-enabled-orange)
+![Node](https://img.shields.io/badge/node-%3E%3D14.0.0-brightgreen)
+![Docker](https://img.shields.io/badge/docker-ready-blue)
 
 ---
 
