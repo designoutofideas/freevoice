@@ -141,7 +141,7 @@ sudo git clone https://github.com/designoutofideas/freevoice.git
 cd freevoice
 
 # Install dependencies
-npm install --production
+npm install --omit=dev
 
 # Start with PM2
 pm2 start signaling-server.js --name freevoice

@@ -146,7 +146,7 @@ deploy_pm2() {
     
     echo ""
     echo "Installing dependencies..."
-    npm install --production
+    npm install --omit=dev
     
     echo ""
     echo "Starting with PM2..."

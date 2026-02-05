@@ -98,7 +98,7 @@ git push heroku main
 **VPS/Cloud Server:**
 ```bash
 npm install -g pm2
-npm install --production
+npm install --omit=dev
 pm2 start signaling-server.js --name freevoice
 pm2 save
 ```
