@@ -1,0 +1,36 @@
+{
+  "name": "FreeVoice",
+  "description": "Peer-to-peer video conferencing for freedom of speech and human rights",
+  "keywords": [
+    "webrtc",
+    "video-conferencing",
+    "p2p",
+    "freedom-of-speech",
+    "human-rights"
+  ],
+  "repository": "https://github.com/designoutofideas/freevoice",
+  "logo": "https://raw.githubusercontent.com/designoutofideas/freevoice/main/.github/logo.png",
+  "success_url": "/",
+  "scripts": {},
+  "env": {
+    "NODE_ENV": {
+      "description": "Node environment",
+      "value": "production"
+    },
+    "PORT": {
+      "description": "Port for the signaling server",
+      "value": "8888"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
